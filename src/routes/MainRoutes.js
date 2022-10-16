@@ -7,6 +7,9 @@ import MainLayout from 'layout/MainLayout';
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 const Home = Loadable(lazy(() => import('pages/Home')));
+const CropMaster = Loadable(lazy(() => import('pages/crop-master/CropMasterIndex')));
+const Plot = Loadable(lazy(() => import('pages/plot/Plot')));
+const Party = Loadable(lazy(() => import('pages/party/Party')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
@@ -27,7 +30,7 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: <DashboardDefault />
+            element: <Home />
         },
         {
             path: '/home',
@@ -39,13 +42,22 @@ const MainRoutes = {
         },
         {
             path: 'dashboard',
-            children: [
-                {
-                    path: 'default',
-                    element: <DashboardDefault />
-                }
-            ]
+            element: <DashboardDefault />
         },
+
+        {
+            path: 'crop-master',
+            element: <CropMaster />
+        },
+        {
+            path: 'plot',
+            element: <Plot />
+        },
+        {
+            path: 'party',
+            element: <Party />
+        },
+
         {
             path: 'sample-page',
             element: <SamplePage />

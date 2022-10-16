@@ -12,7 +12,7 @@ import { activeItem } from 'store/reducers/menu';
 
 // ==============================|| NAVIGATION - LIST ITEM ||============================== //
 
-const NavItem = ({ item, level }) => {
+const NavItem = ({ item, level, handleDrawerToggle }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const menu = useSelector((state) => state.menu);
@@ -30,6 +30,7 @@ const NavItem = ({ item, level }) => {
 
     const itemHandler = (id) => {
         dispatch(activeItem({ openItem: [id] }));
+        handleDrawerToggle();
     };
 
     const Icon = item.icon;
