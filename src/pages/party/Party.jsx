@@ -8,7 +8,6 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // project import
 import MainCard from 'components/MainCard';
 import FormField from 'components/FormField';
-import { useFormikContext } from '../../../node_modules/formik/dist/FormikContext';
 
 export const Party = () => {
     return (
@@ -46,7 +45,7 @@ export const Party = () => {
                                         <FormField label="Recieved from" field="recievedFrom" {...formik} />
                                         <FormField label="Recieved to" field="recievedTo" {...formik} />
                                         <FormField label="Amount" field="ammount" type="number" {...formik} />
-                                        <FormField label="Narration" field="narration" type="number" {...formik} />
+                                        <FormField label="Narration" field="narration" multiline type="number" {...formik} />
                                         <Button variant="outlined" type="submit" disabled={formik.isSubmitting}>
                                             Save
                                         </Button>

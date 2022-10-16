@@ -1,6 +1,7 @@
 {
     "name": "agroplus",
     "version": "1.0.0",
+    "homepage": "http://agroplus.co.in/",
     "private": true,
     "dependencies": {
         "@ant-design/colors": "^4.0.0-alpha.0",

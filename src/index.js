@@ -1,6 +1,6 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 
 // scroll bar
 import 'simplebar/src/simplebar.css';
@@ -21,9 +21,9 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
     <StrictMode>
         <ReduxProvider store={store}>
-            <BrowserRouter basename="/agroplus">
+            <HashRouter basename="/">
                 <App />
-            </BrowserRouter>
+            </HashRouter>
         </ReduxProvider>
     </StrictMode>,
     document.getElementById('root')

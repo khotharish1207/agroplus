@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, OutlinedInput, InputLabel, Stack } from '@mui/material';
 
-const FormField = ({ label, field, values, errors, touched, type = 'text', ...props }) => {
+const FormField = ({ label, field, values, errors, touched, multiline = false, type = 'text', ...props }) => {
     return (
         <Grid item xs={12}>
             <Stack spacing={1} mb={2}>
@@ -15,6 +15,8 @@ const FormField = ({ label, field, values, errors, touched, type = 'text', ...pr
                     onChange={props.handleChange}
                     placeholder=""
                     fullWidth
+                    multiline={multiline}
+                    rows={4}
                     error={Boolean(touched[field] && errors[field])}
                 />
                 {touched[field] && errors[field] && (
