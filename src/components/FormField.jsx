@@ -1,13 +1,14 @@
 import React from 'react';
-import { Grid, OutlinedInput, InputLabel, Stack } from '@mui/material';
+import { Grid, OutlinedInput, InputLabel, Stack, TextField, FormHelperText } from '@mui/material';
 
 const FormField = ({ label, field, values, errors, touched, multiline = false, type = 'text', ...props }) => {
     return (
-        <Grid item xs={12}>
+        <Grid item>
             <Stack spacing={1} mb={2}>
                 <InputLabel htmlFor={label}>{label}</InputLabel>
-                <OutlinedInput
+                <TextField
                     id={label}
+                    // label={label}
                     type={type}
                     value={values[field]}
                     name={field}
@@ -18,6 +19,7 @@ const FormField = ({ label, field, values, errors, touched, multiline = false, t
                     multiline={multiline}
                     rows={4}
                     error={Boolean(touched[field] && errors[field])}
+                    {...props}
                 />
                 {touched[field] && errors[field] && (
                     <FormHelperText error id={`standard-weight-helper-text-${field}`}>

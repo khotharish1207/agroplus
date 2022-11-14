@@ -6,7 +6,7 @@ import { Stack, Typography } from '@mui/material';
 
 // project import
 import DrawerHeaderStyled from './DrawerHeaderStyled';
-import Logo from 'components/Logo';
+import Logo from 'assets/images/logo/logo.png';
 
 // ==============================|| DRAWER HEADER ||============================== //
 
@@ -14,13 +14,10 @@ const DrawerHeader = ({ open }) => {
     const theme = useTheme();
 
     return (
-        // only available in paid version
         <DrawerHeaderStyled theme={theme} open={open}>
             <Stack direction="row" spacing={1} alignItems="center">
-                {/* <Logo /> */}
-                <Typography variant="h1" color="success.dark">
-                    Agroplus
-                </Typography>
+                <img height={50} src={Logo}></img>
+                <hr />
             </Stack>
         </DrawerHeaderStyled>
     );

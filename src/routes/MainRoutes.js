@@ -10,6 +10,7 @@ const Home = Loadable(lazy(() => import('pages/Home')));
 const CropMaster = Loadable(lazy(() => import('pages/crop-master/CropMasterIndex')));
 const Plot = Loadable(lazy(() => import('pages/plot/Plot')));
 const Party = Loadable(lazy(() => import('pages/party/Party')));
+const Purchase = Loadable(lazy(() => import('pages/purchase/Purchase')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
@@ -56,6 +57,10 @@ const MainRoutes = {
         {
             path: 'party',
             element: <Party />
+        },
+        {
+            path: 'purchase',
+            element: <Purchase />
         },
 
         {

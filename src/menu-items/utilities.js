@@ -10,7 +10,8 @@ import {
     AppstoreOutlined,
     TeamOutlined,
     AccountBookOutlined,
-    ThunderboltOutlined
+    ThunderboltOutlined,
+    MoneyCollectOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -25,7 +26,8 @@ const icons = {
     AppstoreOutlined,
     TeamOutlined,
     AccountBookOutlined,
-    ThunderboltOutlined
+    ThunderboltOutlined,
+    MoneyCollectOutlined
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
@@ -69,6 +71,13 @@ const utilities = {
             type: 'item',
             url: '/party',
             icon: icons.TeamOutlined
+        },
+        {
+            id: 'purchase',
+            title: 'Purchase',
+            type: 'item',
+            url: '/purchase',
+            icon: icons.MoneyCollectOutlined
         }
 
         // {
