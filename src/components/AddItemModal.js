@@ -31,21 +31,13 @@ const schema = Yup.object().shape({
 const AddItemModal = ({ handleClose, open, onSave }) => {
     const getTotal = (values) => {
         const { quantity, ratePerUnit } = values;
-        if (quantity && ratePerUnit && !total) {
+        if (quantity && ratePerUnit) {
             return Number(quantity) * Number(ratePerUnit);
         }
         return null;
     };
 
     const onChange = () => {};
-
-    // const getRate = (values) => {
-    //     const { quantity, total, ratePerUnit } = values;
-    //     if (quantity && total && !ratePerUnit) {
-    //         return Number(total) / Number(quantity);
-    //     }
-    //     return null;
-    // };
 
     return (
         <Dialog onClose={handleClose} open={open} fullWidth>
@@ -56,20 +48,18 @@ const AddItemModal = ({ handleClose, open, onSave }) => {
                         item: {}
                     }}
                     onSubmit={async (values, { setErrors, setStatus, setSubmitting }, ...rest) => {
-                        console.log('-----', values);
-                        schema.isValid(values).then(console.log);
+                        // console.log('-----', values);
+                        // schema.isValid(values).then(console.log);
                     }}
                     validationSchema={schema}
                 >
                     {(formik) => {
-                        console.log('additemmodal', formik);
                         return (
                             <Form onSubmit={formik.handleSubmit}>
                                 <Grid container spacing={1}>
                                     <Grid item xs={12}>
                                         <Items
                                             onChange={(val) => {
-                                                console.log('onchange---', val);
                                                 formik.setFieldValue('item', val);
                                                 // formik.setValues({
                                                 //     unit: val?.unit,
@@ -109,7 +99,14 @@ const AddItemModal = ({ handleClose, open, onSave }) => {
                                         />
                                     </Grid>
                                     <Grid item xs={6} md={4}>
-                                        <FormField label="total" field="total" type="number" {...formik} value={getTotal(formik.values)} />
+                                        <FormField
+                                            label="total"
+                                            field="total"
+                                            type="number"
+                                            disabled
+                                            {...formik}
+                                            value={getTotal(formik.values)}
+                                        />
                                     </Grid>
                                 </Grid>
                                 <DialogActions>
@@ -121,7 +118,10 @@ const AddItemModal = ({ handleClose, open, onSave }) => {
                                         variant="contained"
                                         type="submit"
                                         onClick={() => {
-                                            onSave(formik.values);
+                                            onSave({
+                                                ...formik.values,
+                                                total: getTotal(formik.values)
+                                            });
                                             handleClose();
                                         }}
                                     >

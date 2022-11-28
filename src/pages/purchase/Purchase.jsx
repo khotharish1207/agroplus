@@ -36,19 +36,30 @@ export const Purchase = () => {
                                         <Grid item sm={8}>
                                             <Typography variant="h5">Items</Typography>
                                             {/* <pre>{JSON.stringify(items, null, 4)}</pre> */}
-                                            <List>
+                                            <List sx={{ bgcolor: 'background.paper' }}>
                                                 {items.map(({ item, quantity, ratePerUnit, unit, total }) => {
                                                     return (
-                                                        <ListItem alignItems="flex-start">
-                                                            <ListItemText
-                                                                primary={`${item.itemName} - ${quantity} ${unit}`}
-                                                                secondary={`${quantity} * ${ratePerUnit} = ${total}`}
-                                                            />
-                                                            <Divider />
-                                                        </ListItem>
+                                                        <>
+                                                            <ListItem alignItems="flex-start">
+                                                                <ListItemText
+                                                                    primary={`${item.itemName} - ${quantity} ${unit}`}
+                                                                    secondary={`${quantity} * ${ratePerUnit} = ${total}`}
+                                                                />
+                                                            </ListItem>
+                                                            <Divider component="li" />
+                                                        </>
                                                     );
                                                 })}
                                             </List>
+                                            {items.length > 0 && (
+                                                <Typography>
+                                                    Total ={' '}
+                                                    {items.reduce((total, i) => {
+                                                        total += i.total;
+                                                        return total;
+                                                    }, 0)}
+                                                </Typography>
+                                            )}
                                             <Button variant="outlined" startIcon={<PlusOutlined />} onClick={onOpen}>
                                                 Add Item
                                             </Button>

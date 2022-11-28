@@ -107,7 +107,6 @@ export const Items = (props) => {
                             itemName: value?.itemName
                         }}
                         onSubmit={async (values, { setErrors, setStatus, setSubmitting }, ...rest) => {
-                            console.log(values);
                             schema.isValid(values).then((isValid) => {
                                 if (isValid) {
                                     const item = { id: Date.now(), ...values };
