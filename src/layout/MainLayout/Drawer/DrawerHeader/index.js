@@ -16,7 +16,7 @@ const DrawerHeader = ({ open }) => {
     return (
         <DrawerHeaderStyled theme={theme} open={open}>
             <Stack direction="row" spacing={1} alignItems="center">
-                <img height={50} src={Logo}></img>
+                <img height={50} src={Logo} alt="Agroplus"></img>
                 <hr />
             </Stack>
         </DrawerHeaderStyled>

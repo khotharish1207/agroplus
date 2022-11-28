@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

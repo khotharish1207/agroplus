@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
-import { Formik } from 'formik';
-
-// material-ui
-import { Grid, Button, TextField, InputLabel, Typography } from '@mui/material';
 import { PlusOutlined } from '@ant-design/icons';
-
+// material-ui
+import { Button, Grid, Typography, List, ListItem, Divider, ListItemText } from '@mui/material';
+import AddItem from 'components/AddItemModal';
+import FormField from 'components/FormField';
 // project import
 import MainCard from 'components/MainCard';
-import FormField from 'components/FormField';
-import AddItem from 'components/AddItemModal';
-import Items from 'components/Items';
-
-const defaultItems = [{}];
+import { Formik } from 'formik';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export const Purchase = () => {
     const [items, setItems] = useState([]);
     const [open, setOpen] = useState(false);
+    const units = useSelector((state) => state.units);
+
     const onOpen = () => setOpen(true);
     const onClose = () => setOpen(false);
     return (
@@ -37,7 +35,20 @@ export const Purchase = () => {
                                         <FormField label="Category" field="category" {...formik} />
                                         <Grid item sm={8}>
                                             <Typography variant="h5">Items</Typography>
-                                            <pre>{JSON.stringify(items, null, 4)}</pre>
+                                            {/* <pre>{JSON.stringify(items, null, 4)}</pre> */}
+                                            <List>
+                                                {items.map(({ item, quantity, ratePerUnit, unit, total }) => {
+                                                    return (
+                                                        <ListItem alignItems="flex-start">
+                                                            <ListItemText
+                                                                primary={`${item.itemName} - ${quantity} ${unit}`}
+                                                                secondary={`${quantity} * ${ratePerUnit} = ${total}`}
+                                                            />
+                                                            <Divider />
+                                                        </ListItem>
+                                                    );
+                                                })}
+                                            </List>
                                             <Button variant="outlined" startIcon={<PlusOutlined />} onClick={onOpen}>
                                                 Add Item
                                             </Button>

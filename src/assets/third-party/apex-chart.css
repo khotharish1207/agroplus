@@ -2,3 +2,8 @@
     left: -4px !important;
     top: 2px !important;
 }
+
+/* css override to match autocomplete height */
+.css-1qqsdnr-MuiAutocomplete-root .MuiOutlinedInput-root {
+    padding: 3px;
+}

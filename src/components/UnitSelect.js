@@ -12,13 +12,11 @@ import {
     MenuItem,
     Select,
     Stack,
-    TextField,
-    Typography
+    TextField
 } from '@mui/material';
 import FormField from 'components/FormField';
-import UnitSelect from './UnitSelect';
 import { Formik, Form } from 'formik';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 
@@ -27,26 +25,37 @@ import { addItem } from 'store/reducers/items';
 const schema = Yup.object().shape({
     itemName: Yup.string().min(1, 'Too Short!').required('Required'),
     unit: Yup.string().required('Required'),
-    secondaryUnit: Yup.string().required('Required'),
-    conversionRate: Yup.number().required().positive().integer().required('Required')
+    ratePerUnit: Yup.number().required().positive().integer().required('Required')
 });
 
 const filter = createFilterOptions();
 
-export const Items = (props) => {
+export const UnitSelect = (props) => {
+    const { exclude = [], only = [] } = props;
     const [open, setOpen] = useState(false);
     const [value, setValue] = React.useState(null);
-    const { items, units } = useSelector(({ items, units }) => ({ items, units }));
-    const unitObj = units.reduce((acc, u) => {
-        acc[u.value] = u.label;
-        return acc;
-    }, {});
+    const units = useSelector((state) => state.units);
+    const [options, setOptions] = React.useState(units);
 
     const handleClose = () => setOpen(false);
-    const onChange = (val) => {
+
+    useEffect(() => {
+        if (props.value && !value) {
+            const selected = units.find((u) => u.value === props.value);
+            setValue(selected);
+        }
+        if (exclude.length) {
+            setOptions(units.filter((u) => !exclude.includes(u.value)));
+        }
+        if (only.length > 0) {
+            setOptions(units.filter((u) => only.includes(u.value)));
+        }
+    }, [props.value, exclude, only]);
+
+    const onChange = (val, event) => {
         setValue(val);
         if (props.onChange) {
-            props.onChange(val);
+            props.onChange(val, event);
         }
     };
 
@@ -59,47 +68,45 @@ export const Items = (props) => {
                 onBackdropClick={() => false}
                 value={value}
                 renderInput={(params) => <TextField {...params} />}
-                renderOption={(props, option) => (
-                    <Box component="li" {...props}>
-                        {option.itemName} (Rs. {option.ratePerUnit} / {option.unit})
-                    </Box>
-                )}
-                getOptionLabel={(option) => option.itemName}
                 filterOptions={(options, params) => {
                     const filtered = filter(options, params);
 
                     const { inputValue } = params;
                     // Suggest the creation of a new value
-                    const isExisting = options.some((option) => inputValue === option.itemName);
+                    const isExisting = options.some((option) => inputValue === option.label);
                     if (inputValue !== '' && !isExisting) {
                         filtered.push({
                             inputValue,
-                            itemName: `Add item "${inputValue}"`,
-                            ratePerUnit: 'XX',
-                            unit: 'XX'
+                            label: `Add item "${inputValue}"`
                         });
                     }
                     return filtered;
                 }}
-                options={items}
+                options={options}
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'string') {
-                        onChange({
-                            itemName: itemName
-                        });
+                        onChange(
+                            {
+                                itemName: itemName
+                            },
+                            event
+                        );
                     } else if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
-                        onChange({
-                            itemName: newValue.inputValue
-                        });
+                        onChange(
+                            {
+                                itemName: newValue.inputValue
+                            },
+                            event
+                        );
                         setOpen(true);
                     } else {
-                        onChange(newValue);
+                        onChange(newValue, event);
                     }
                 }}
             />
             <Dialog onClose={handleClose} open={open} fullWidth>
-                <DialogTitle>Add New Item</DialogTitle>
+                <DialogTitle>Add New Unit</DialogTitle>
 
                 <DialogContent>
                     <Formik
@@ -107,7 +114,6 @@ export const Items = (props) => {
                             itemName: value?.itemName
                         }}
                         onSubmit={async (values, { setErrors, setStatus, setSubmitting }, ...rest) => {
-                            console.log(values);
                             schema.isValid(values).then((isValid) => {
                                 if (isValid) {
                                     const item = { id: Date.now(), ...values };
@@ -120,7 +126,6 @@ export const Items = (props) => {
                         validationSchema={schema}
                     >
                         {(formik) => {
-                            console.log('formik items', formik.values);
                             return (
                                 <Form>
                                     <Grid container spacing={1}>
@@ -130,44 +135,22 @@ export const Items = (props) => {
                                         <Grid item xs={6} md={4}>
                                             <Stack spacing={1} mb={2}>
                                                 <InputLabel id="demo-simple-select-label">Unit</InputLabel>
-
-                                                <UnitSelect
-                                                    value={formik.values.unit}
-                                                    onChange={({ value }) => formik.setFieldValue('unit', value)}
-                                                />
+                                                <Select
+                                                    fullWidth
+                                                    labelId="unit-label"
+                                                    id="unit-select"
+                                                    label="Unit"
+                                                    name="unit"
+                                                    onChange={formik.handleChange}
+                                                >
+                                                    <MenuItem value="kg">Kg</MenuItem>
+                                                </Select>
                                             </Stack>
                                         </Grid>
 
                                         <Grid item xs={6} md={4}>
-                                            <Stack spacing={1} mb={2}>
-                                                <InputLabel id="demo-simple-select-label">Secondary Unit</InputLabel>
-                                                <UnitSelect
-                                                    value={formik.values.secondaryUnit}
-                                                    onChange={({ value }) => formik.setFieldValue('secondaryUnit', value)}
-                                                />
-                                            </Stack>
-                                        </Grid>
-
-                                        {formik.values.unit && formik.values.secondaryUnit && (
-                                            <Grid item xs={12}>
-                                                <InputLabel>Conversion</InputLabel>
-
-                                                <Stack mt={2} direction="row" spacing={1} mb={2} style={{ alignItems: 'center' }}>
-                                                    <InputLabel>{unitObj[formik.values.unit]}</InputLabel>
-                                                    <Typography variant="overline">=</Typography>
-                                                    <TextField
-                                                        id="conversionRate"
-                                                        onChange={formik.handleChange}
-                                                        value={formik.values.conversionRate}
-                                                    />
-                                                    <InputLabel>{unitObj[formik.values.secondaryUnit]}</InputLabel>
-                                                </Stack>
-                                            </Grid>
-                                        )}
-
-                                        {/* <Grid item xs={6} md={4}>
                                             <FormField label="Rate per unit" field="ratePerUnit" type="number" {...formik} />
-                                        </Grid> */}
+                                        </Grid>
                                     </Grid>
                                     <DialogActions>
                                         <Button onClick={handleClose} color="error">
@@ -187,4 +170,4 @@ export const Items = (props) => {
     );
 };
 
-export default Items;
+export default UnitSelect;

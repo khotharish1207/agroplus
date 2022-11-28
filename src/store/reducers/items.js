@@ -6,14 +6,16 @@ const initialState = [
     {
         id: '1',
         itemName: 'Test Item',
-        ratePerUnit: 20,
-        unit: 'kg'
+        conversionRate: 20,
+        unit: 'bags',
+        secondaryUnit: 'kilograms'
     },
     {
         id: '2',
         itemName: 'Item 2',
-        ratePerUnit: 100,
-        unit: 'kg'
+        conversionRate: 1000,
+        unit: 'kilograms',
+        secondaryUnit: 'grammes'
     }
 ];
 
@@ -40,4 +42,4 @@ const items = createSlice({
 
 export default items.reducer;
 
-export const { addItem, removeItem } = items.actions;
+export const { addItem, removeItem, setItems } = items.actions;
