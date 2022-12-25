@@ -59,7 +59,7 @@ const AuthRegister = () => {
                     firstname: '',
                     lastname: '',
                     email: '',
-                    company: '',
+                    mobile: '',
                     password: '',
                     submit: null
                 }}
@@ -67,7 +67,8 @@ const AuthRegister = () => {
                     firstname: Yup.string().max(255).required('First Name is required'),
                     lastname: Yup.string().max(255).required('Last Name is required'),
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                    password: Yup.string().max(255).required('Password is required')
+                    password: Yup.string().max(255).required('Password is required'),
+                    mobile: Yup.number().max(10).required('Mobile number is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
@@ -129,21 +130,21 @@ const AuthRegister = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="company-signup">Company</InputLabel>
+                                    <InputLabel htmlFor="mobile-signup">Mobile</InputLabel>
                                     <OutlinedInput
                                         fullWidth
-                                        error={Boolean(touched.company && errors.company)}
-                                        id="company-signup"
-                                        value={values.company}
-                                        name="company"
+                                        error={Boolean(touched.mobile && errors.mobile)}
+                                        id="mobile-signup"
+                                        value={values.mobile}
+                                        name="mobile"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Demo Inc."
+                                        placeholder="1234567890"
                                         inputProps={{}}
                                     />
-                                    {touched.company && errors.company && (
+                                    {touched.mobile && errors.mobile && (
                                         <FormHelperText error id="helper-text-company-signup">
-                                            {errors.company}
+                                            {errors.mobile}
                                         </FormHelperText>
                                     )}
                                 </Stack>
@@ -252,14 +253,14 @@ const AuthRegister = () => {
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <Divider>
                                     <Typography variant="caption">Sign up with</Typography>
                                 </Divider>
                             </Grid>
                             <Grid item xs={12}>
                                 <FirebaseSocial />
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </form>
                 )}

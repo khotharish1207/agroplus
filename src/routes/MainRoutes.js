@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 
 // project import
 import Loadable from 'components/Loadable';
@@ -25,9 +26,9 @@ const NotFound = () => <h1>NotFound</h1>;
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+const MainRoutes = (isAuthenticated) => ({
     path: '/',
-    element: <MainLayout />,
+    element: isAuthenticated ? <MainLayout /> : <Navigate to="/login" />,
     children: [
         {
             path: '/',
@@ -84,6 +85,6 @@ const MainRoutes = {
             element: <NotFound />
         }
     ]
-};
+});
 
 export default MainRoutes;

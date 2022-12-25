@@ -10,6 +10,7 @@ import AuthFooter from 'components/cards/AuthFooter';
 
 // assets
 import AuthBackground from 'assets/images/auth/AuthBackground';
+import Agroplus from 'assets/images/logo/logo.png';
 
 // ==============================|| AUTHENTICATION - WRAPPER ||============================== //
 
@@ -25,7 +26,8 @@ const AuthWrapper = ({ children }) => (
             }}
         >
             <Grid item xs={12} sx={{ ml: 3, mt: 3 }}>
-                <Logo />
+                {/* <Logo /> */}
+                <img height={50} src={Agroplus} alt="Agroplus"></img>
             </Grid>
             <Grid item xs={12}>
                 <Grid
@@ -41,9 +43,9 @@ const AuthWrapper = ({ children }) => (
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
+            {/* <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
                 <AuthFooter />
-            </Grid>
+            </Grid> */}
         </Grid>
     </Box>
 );

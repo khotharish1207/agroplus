@@ -40,6 +40,7 @@
         "react-syntax-highlighter": "^15.4.5",
         "react-window": "^1.8.6",
         "redux": "^4.1.2",
+        "redux-saga": "^1.2.2",
         "simplebar": "^5.3.5",
         "simplebar-react": "^2.3.6",
         "typescript": "4.4.4",

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography, useMediaQuery } from '@mui/material';
 
 // project import
 import { activeItem } from 'store/reducers/menu';
@@ -16,6 +16,7 @@ const NavItem = ({ item, level, handleDrawerToggle }) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const menu = useSelector((state) => state.menu);
+    const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
     const { drawerOpen, openItem } = menu;
 
     let itemTarget = '_self';
@@ -30,7 +31,7 @@ const NavItem = ({ item, level, handleDrawerToggle }) => {
 
     const itemHandler = (id) => {
         dispatch(activeItem({ openItem: [id] }));
-        handleDrawerToggle();
+        matchDownMD && handleDrawerToggle();
     };
 
     const Icon = item.icon;

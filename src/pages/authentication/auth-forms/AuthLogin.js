@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 // material-ui
 import {
+    Alert,
     Button,
     Checkbox,
     Divider,
@@ -26,12 +28,18 @@ import { Formik } from 'formik';
 import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 
+//actions
+import { login } from 'store/reducers/actions';
+import { setAuth } from 'store/reducers/app';
+
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [checked, setChecked] = React.useState(false);
 
     const [showPassword, setShowPassword] = React.useState(false);
@@ -43,25 +51,38 @@ const AuthLogin = () => {
         event.preventDefault();
     };
 
+    const checkAuth = ({ email, password }) => {
+        return new Promise((resolve, reject) => {
+            if (email === 'admin@agroplus.com' && password === 'admin@123') {
+                resolve();
+            } else {
+                reject({ message: 'username or password do not match' });
+            }
+        });
+    };
+
     return (
         <>
             <Formik
                 initialValues={{
-                    email: 'info@codedthemes.com',
-                    password: '123456',
+                    email: 'admin@agroplus.com',
+                    password: 'admin@123',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
-                onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                onSubmit={async (values, { setErrors, setStatus, setSubmitting, setFieldError, ...other }, ...rest) => {
                     try {
+                        await checkAuth(values);
                         setStatus({ success: false });
                         setSubmitting(false);
+                        dispatch(login()); // saga call
+                        navigate('/');
                     } catch (err) {
                         setStatus({ success: false });
-                        setErrors({ submit: err.message });
+                        setFieldError('submit', err.message);
                         setSubmitting(false);
                     }
                 }}
@@ -69,6 +90,11 @@ const AuthLogin = () => {
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
+                            {errors.submit && (
+                                <Grid item xs={12}>
+                                    <Alert severity="error">{errors.submit}</Alert>
+                                </Grid>
+                            )}
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
                                     <InputLabel htmlFor="email-login">Email Address</InputLabel>
@@ -144,11 +170,7 @@ const AuthLogin = () => {
                                     </Link>
                                 </Stack>
                             </Grid>
-                            {errors.submit && (
-                                <Grid item xs={12}>
-                                    <FormHelperText error>{errors.submit}</FormHelperText>
-                                </Grid>
-                            )}
+
                             <Grid item xs={12}>
                                 <AnimateButton>
                                     <Button
@@ -164,14 +186,14 @@ const AuthLogin = () => {
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <Divider>
                                     <Typography variant="caption"> Login with</Typography>
                                 </Divider>
                             </Grid>
                             <Grid item xs={12}>
                                 <FirebaseSocial />
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     </form>
                 )}
