@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 // material-ui
-import { Button, Grid, Typography, List, ListItem, Divider, ListItemText } from '@mui/material';
+import { Button, Divider, Grid, InputLabel, List, ListItem, ListItemText, Stack, Typography } from '@mui/material';
+import AccountSelect from 'components/AccountSelect';
 import AddItem from 'components/AddItemModal';
 import FormField from 'components/FormField';
 // project import
@@ -30,12 +31,20 @@ export const Purchase = () => {
                             return (
                                 <form onSubmit={formik.handleSubmit}>
                                     <Grid item sm={8}>
-                                        <FormField label="Account Name" field="accountName" {...formik} />
+                                        <Grid item>
+                                            <Stack spacing={1} mb={2}>
+                                                <InputLabel id="unit-select">Account Name</InputLabel>
+                                                <AccountSelect
+                                                    value={formik.values.accountName}
+                                                    onChange={({ value }) => formik.setFieldValue('accountName', value ?? '')}
+                                                />
+                                            </Stack>
+                                        </Grid>
+
                                         <FormField label="Plot Name" field="plotName" {...formik} />
                                         <FormField label="Category" field="category" {...formik} />
                                         <Grid item sm={8}>
                                             <Typography variant="h5">Items</Typography>
-                                            {/* <pre>{JSON.stringify(items, null, 4)}</pre> */}
                                             <List sx={{ bgcolor: 'background.paper' }}>
                                                 {items.map(({ item, quantity, ratePerUnit, unit, total }) => {
                                                     return (

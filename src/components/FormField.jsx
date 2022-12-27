@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, OutlinedInput, InputLabel, Stack, TextField, FormHelperText } from '@mui/material';
 
 const FormField = ({ label, field, values, errors, touched, multiline = false, type = 'text', ...props }) => {
+    console.log(field, touched[field], errors[field]);
     return (
         <Grid item>
             <Stack spacing={1} mb={2}>

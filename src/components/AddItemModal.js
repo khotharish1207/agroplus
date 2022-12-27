@@ -60,7 +60,7 @@ const AddItemModal = ({ handleClose, open, onSave }) => {
                                     <Grid item xs={12}>
                                         <Items
                                             onChange={(val) => {
-                                                formik.setFieldValue('item', val);
+                                                formik.setFieldValue('item', val || '');
                                                 // formik.setValues({
                                                 //     unit: val?.unit,
                                                 //     ratePerUnit: val?.ratePerUnit
@@ -69,7 +69,7 @@ const AddItemModal = ({ handleClose, open, onSave }) => {
                                         />
                                         {Object.keys(formik.values.item).length > 0 && (
                                             <Typography variant="overline" display="block" gutterBottom align="right">
-                                                {formik.values.item?.unit} = {formik.values.item?.conversionRate}{' '}
+                                                1 {formik.values.item?.unit} = {formik.values.item?.conversionRate}{' '}
                                                 {formik.values.item?.secondaryUnit}
                                             </Typography>
                                         )}

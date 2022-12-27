@@ -152,7 +152,7 @@ export const Items = (props) => {
                                                 <InputLabel>Conversion</InputLabel>
 
                                                 <Stack mt={2} direction="row" spacing={1} mb={2} style={{ alignItems: 'center' }}>
-                                                    <InputLabel>{unitObj[formik.values.unit]}</InputLabel>
+                                                    <InputLabel>1&nbsp; {unitObj[formik.values.unit]}</InputLabel>
                                                     <Typography variant="overline">=</Typography>
                                                     <TextField
                                                         id="conversionRate"
