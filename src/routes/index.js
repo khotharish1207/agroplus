@@ -8,6 +8,6 @@ import MainRoutes from './MainRoutes';
 // ==============================|| ROUTING RENDER ||============================== //
 
 export default function ThemeRoutes() {
-    const isAuthenticated = useSelector((state) => state.app.auth);
+    const isAuthenticated = useSelector((state) => state.app.token);
     return useRoutes([MainRoutes(isAuthenticated), LoginRoutes]);
 }

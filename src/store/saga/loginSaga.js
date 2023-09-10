@@ -1,16 +1,9 @@
-import { all, call, put, select, takeLatest } from 'redux-saga/effects';
-// import axios from "axios";
-
+import { all, put, takeLatest } from 'redux-saga/effects';
 import { login, logout } from 'store/reducers/actions';
-import { setAuth, setUser } from 'store/reducers/app';
+import { setAuth, setToken } from 'store/reducers/app';
 
 export function* handler() {
     try {
-        // const config = {
-        //     method: 'GET',
-        //     url: `url`
-        // };
-        // const { data } = yield call(axios, config);
         localStorage.setItem('agroplus-auth', true);
         yield put(setAuth(true));
     } catch (error) {
@@ -22,6 +15,7 @@ export function* logoutHandler() {
     try {
         localStorage.removeItem('agroplus-auth');
         yield put(setAuth(false));
+        yield put(setToken(''));
     } catch (error) {
         yield put(setAuth(false));
     }

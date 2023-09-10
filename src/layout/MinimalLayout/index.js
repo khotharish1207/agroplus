@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import Alerts from 'components/Alerts';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 

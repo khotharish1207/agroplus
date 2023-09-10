@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // material-ui
 import {
@@ -21,20 +21,26 @@ import {
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
 
 // project import
-import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import Alerts from 'components/Alerts';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { EyeOutlined, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
 
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const AuthRegister = () => {
+    const navigate = useNavigate();
+
     const [level, setLevel] = useState();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [authError, setAuthError] = useState(false);
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -48,16 +54,40 @@ const AuthRegister = () => {
         setLevel(strengthColor(temp));
     };
 
+    const registerApi = (values) => {
+        axios({
+            method: 'POST',
+            url: 'http://api.agroplus.co.in/api/register',
+            data: {
+                MobNo: values.mobile,
+                Password1: values.password,
+                FirstName: values.firstname,
+                LastName: values.lastname,
+                Address1: 'test address',
+                EmailId: values.email,
+                FarmName: values.farm,
+                Flag: 0
+            }
+        })
+            .then(() => {
+                navigate('/login');
+            })
+            .catch(() => setAuthError(true));
+    };
+
     useEffect(() => {
         changePassword('');
     }, []);
 
     return (
         <>
+            {authError && <Alerts severity="error" message="Error while registering user" onClose={() => setAuthError(false)} />}
+
             <Formik
                 initialValues={{
                     firstname: '',
                     lastname: '',
+                    farm: '',
                     email: '',
                     mobile: '',
                     password: '',
@@ -66,19 +96,31 @@ const AuthRegister = () => {
                 validationSchema={Yup.object().shape({
                     firstname: Yup.string().max(255).required('First Name is required'),
                     lastname: Yup.string().max(255).required('Last Name is required'),
+                    farm: Yup.string().max(255).required('farm Name is required'),
                     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                     password: Yup.string().max(255).required('Password is required'),
-                    mobile: Yup.number().max(10).required('Mobile number is required')
+                    mobile: Yup.string()
+                        .matches(/^[6-9]\d{9}$/, {
+                            message: 'Please enter valid number.',
+                            excludeEmptyString: false
+                        })
+                        .required('Mobile is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
-                        setStatus({ success: false });
-                        setSubmitting(false);
+                        setLoading(true);
+                        setTimeout(async () => {
+                            await registerApi(values);
+                            setStatus({ success: false });
+                            setSubmitting(false);
+                            setLoading(false);
+                        }, 2000);
                     } catch (err) {
                         console.error(err);
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
                         setSubmitting(false);
+                        setLoading(false);
                     }
                 }}
             >
@@ -89,6 +131,7 @@ const AuthRegister = () => {
                                 <Stack spacing={1}>
                                     <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
                                     <OutlinedInput
+                                        disabled={isSubmitting || loading}
                                         id="firstname-login"
                                         type="firstname"
                                         value={values.firstname}
@@ -111,6 +154,7 @@ const AuthRegister = () => {
                                     <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
                                     <OutlinedInput
                                         fullWidth
+                                        disabled={isSubmitting || loading}
                                         error={Boolean(touched.lastname && errors.lastname)}
                                         id="lastname-signup"
                                         type="lastname"
@@ -130,9 +174,32 @@ const AuthRegister = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
+                                    <InputLabel htmlFor="farm-name">Farm Name</InputLabel>
+                                    <OutlinedInput
+                                        fullWidth
+                                        disabled={isSubmitting || loading}
+                                        error={Boolean(touched.farm && errors.farm)}
+                                        id="farm-name"
+                                        value={values.farm}
+                                        name="farm"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        placeholder="farm"
+                                        inputProps={{}}
+                                    />
+                                    {touched.farm && errors.farm && (
+                                        <FormHelperText error id="helper-text-company-signup">
+                                            {errors.farm}
+                                        </FormHelperText>
+                                    )}
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Stack spacing={1}>
                                     <InputLabel htmlFor="mobile-signup">Mobile</InputLabel>
                                     <OutlinedInput
                                         fullWidth
+                                        disabled={isSubmitting || loading}
                                         error={Boolean(touched.mobile && errors.mobile)}
                                         id="mobile-signup"
                                         value={values.mobile}
@@ -154,6 +221,7 @@ const AuthRegister = () => {
                                     <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
                                     <OutlinedInput
                                         fullWidth
+                                        disabled={isSubmitting || loading}
                                         error={Boolean(touched.email && errors.email)}
                                         id="email-login"
                                         type="email"
@@ -176,6 +244,7 @@ const AuthRegister = () => {
                                     <InputLabel htmlFor="password-signup">Password</InputLabel>
                                     <OutlinedInput
                                         fullWidth
+                                        disabled={isSubmitting || loading}
                                         error={Boolean(touched.password && errors.password)}
                                         id="password-signup"
                                         type={showPassword ? 'text' : 'password'}
@@ -242,25 +311,18 @@ const AuthRegister = () => {
                                 <AnimateButton>
                                     <Button
                                         disableElevation
-                                        disabled={isSubmitting}
+                                        disabled={isSubmitting || loading}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        startIcon={loading ? <SyncOutlined spin /> : null}
                                     >
                                         Create Account
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            {/* <Grid item xs={12}>
-                                <Divider>
-                                    <Typography variant="caption">Sign up with</Typography>
-                                </Divider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FirebaseSocial />
-                            </Grid> */}
                         </Grid>
                     </form>
                 )}

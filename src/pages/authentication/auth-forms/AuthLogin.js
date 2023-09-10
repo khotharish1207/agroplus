@@ -23,17 +23,19 @@ import {
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import axios from 'axios';
 
 // project import
 import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
+import Alerts from 'components/Alerts';
 
 //actions
 import { login } from 'store/reducers/actions';
-import { setAuth } from 'store/reducers/app';
+import { setAuth, setToken } from 'store/reducers/app';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { EyeOutlined, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -41,8 +43,10 @@ const AuthLogin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [checked, setChecked] = React.useState(false);
-
     const [showPassword, setShowPassword] = React.useState(false);
+    const [authError, setAuthError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -51,43 +55,52 @@ const AuthLogin = () => {
         event.preventDefault();
     };
 
-    const checkAuth = ({ email, password }) => {
-        return new Promise((resolve, reject) => {
-            if (email === 'admin@agroplus.com' && password === 'admin@123') {
-                resolve();
-            } else {
-                reject({ message: 'username or password do not match' });
-            }
-        });
+    const checkAuth = ({ password, mobile }) => {
+        axios({
+            method: 'GET',
+            url: `http://api.agroplus.co.in/api/Register/GetLogin/${mobile}/${password}`
+        })
+            .then((data) => {
+                dispatch(setToken(data));
+                navigate('/');
+            })
+            .catch(() => setAuthError(true));
     };
 
     return (
         <>
+            {authError && <Alerts severity="error" message="Auth error" onClose={() => setAuthError(false)} />}
+
             <Formik
                 initialValues={{
-                    email: 'admin@agroplus.com',
-                    password: 'admin@123',
+                    password: '',
+                    mobile: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+                    mobile: Yup.string()
+                        .matches(/^[6-9]\d{9}$/, {
+                            message: 'Please enter valid number.',
+                            excludeEmptyString: false
+                        })
+                        .required('Mobile is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting, setFieldError, ...other }, ...rest) => {
                     try {
+                        setLoading(true);
                         await checkAuth(values);
                         setStatus({ success: false });
-                        setSubmitting(false);
-                        dispatch(login()); // saga call
-                        navigate('/');
+                        setLoading(false);
+                        // dispatch(login()); // saga call
                     } catch (err) {
                         setStatus({ success: false });
                         setFieldError('submit', err.message);
-                        setSubmitting(false);
+                        setLoading(false);
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setSubmitting, ...rest }) => (
                     <form noValidate onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
                             {errors.submit && (
@@ -97,21 +110,22 @@ const AuthLogin = () => {
                             )}
                             <Grid item xs={12}>
                                 <Stack spacing={1}>
-                                    <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                                    <InputLabel htmlFor="mobile-login">Mobile</InputLabel>
                                     <OutlinedInput
-                                        id="email-login"
-                                        type="email"
-                                        value={values.email}
-                                        name="email"
+                                        id="mobile-login"
+                                        // type="email"
+                                        value={values.mobile}
+                                        name="mobile"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
-                                        placeholder="Enter email address"
+                                        placeholder="Enter mobile"
                                         fullWidth
-                                        error={Boolean(touched.email && errors.email)}
+                                        disabled={loading}
+                                        error={Boolean(touched.mobile && errors.mobile)}
                                     />
-                                    {touched.email && errors.email && (
+                                    {touched.mobile && errors.mobile && (
                                         <FormHelperText error id="standard-weight-helper-text-email-login">
-                                            {errors.email}
+                                            {errors.mobile}
                                         </FormHelperText>
                                     )}
                                 </Stack>
@@ -142,6 +156,7 @@ const AuthLogin = () => {
                                             </InputAdornment>
                                         }
                                         placeholder="Enter password"
+                                        disabled={loading}
                                     />
                                     {touched.password && errors.password && (
                                         <FormHelperText error id="standard-weight-helper-text-password-login">
@@ -175,25 +190,19 @@ const AuthLogin = () => {
                                 <AnimateButton>
                                     <Button
                                         disableElevation
-                                        disabled={isSubmitting}
+                                        // disabled={isSubmitting}
                                         fullWidth
                                         size="large"
                                         type="submit"
                                         variant="contained"
                                         color="primary"
+                                        onClick={() => setSubmitting(true)}
+                                        startIcon={loading ? <SyncOutlined spin /> : null}
                                     >
                                         Login
                                     </Button>
                                 </AnimateButton>
                             </Grid>
-                            {/* <Grid item xs={12}>
-                                <Divider>
-                                    <Typography variant="caption"> Login with</Typography>
-                                </Divider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FirebaseSocial />
-                            </Grid> */}
                         </Grid>
                     </form>
                 )}
