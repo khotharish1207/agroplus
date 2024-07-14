@@ -6,8 +6,8 @@ const initialState = [];
 
 // ==============================|| SLICE - Items ||============================== //
 
-const crop = createSlice({
-    name: 'crop',
+const plot = createSlice({
+    name: 'plot',
     initialState,
     reducers: {
         addItem(state, action) {
@@ -25,6 +25,6 @@ const crop = createSlice({
     }
 });
 
-export default crop.reducer;
+export default plot.reducer;
 
-export const { addItem, removeItem, setItems } = crop.actions;
+export const { addItem, removeItem, setItems } = plot.actions;

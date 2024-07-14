@@ -1,11 +1,15 @@
 // types
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 // initial state
 const initialState = {
     auth: localStorage.getItem('agroplus-auth') === 'true',
     user: {},
-    token: ''
+    token: cookies.get('agroplus-token') || '',
+    loading: false
 };
 
 // ==============================|| SLICE - App ||============================== //
@@ -25,10 +29,14 @@ const app = createSlice({
         setToken(state, action) {
             state = { ...state, token: action.payload };
             return state;
+        },
+        setLoading(state, action) {
+            state = { ...state, loading: action.payload };
+            return state;
         }
     }
 });
 
 export default app.reducer;
 
-export const { setAuth, setUser, setToken } = app.actions;
+export const { setAuth, setUser, setToken, setLoading } = app.actions;

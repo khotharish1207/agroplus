@@ -4,10 +4,10 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import { CloseOutlined } from '@ant-design/icons';
 
-export default function Alerts({ severity, onClose, message }) {
+export default function Alerts({ severity, onClose, message, show }) {
     const [open, setOpen] = React.useState(true);
 
-    React.useEffect(() => setOpen(true), []);
+    React.useEffect(() => setOpen(show), [show]);
 
     return (
         <Collapse in={open}>

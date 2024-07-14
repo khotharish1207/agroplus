@@ -11,7 +11,8 @@ import {
     TeamOutlined,
     AccountBookOutlined,
     ThunderboltOutlined,
-    MoneyCollectOutlined
+    MoneyCollectOutlined,
+    TransactionOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -27,7 +28,8 @@ const icons = {
     TeamOutlined,
     AccountBookOutlined,
     ThunderboltOutlined,
-    MoneyCollectOutlined
+    MoneyCollectOutlined,
+    TransactionOutlined
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
@@ -78,6 +80,13 @@ const utilities = {
             type: 'item',
             url: '/purchase',
             icon: icons.MoneyCollectOutlined
+        },
+        {
+            id: 'ledger',
+            title: 'Ledger',
+            type: 'item',
+            url: '/ledger',
+            icon: icons.TransactionOutlined
         }
 
         // {

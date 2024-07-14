@@ -13,7 +13,13 @@ const middleware = [sagaMiddleware];
 
 const store = configureStore({
     reducer: reducers,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware)
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                // Ignore these field paths in all actions
+                ignoredActionPaths: ['payload.onSuccess', 'payload.onFail']
+            }
+        }).concat(middleware)
 });
 
 sagaMiddleware.run(rootSaga);

@@ -6,8 +6,8 @@ const initialState = [];
 
 // ==============================|| SLICE - Items ||============================== //
 
-const crop = createSlice({
-    name: 'crop',
+const ledger = createSlice({
+    name: 'ledger',
     initialState,
     reducers: {
         addItem(state, action) {
@@ -25,6 +25,6 @@ const crop = createSlice({
     }
 });
 
-export default crop.reducer;
+export default ledger.reducer;
 
-export const { addItem, removeItem, setItems } = crop.actions;
+export const { addItem, removeItem, setItems } = ledger.actions;

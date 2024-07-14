@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 // material-ui
 import {
@@ -27,6 +28,7 @@ import axios from 'axios';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import Alerts from 'components/Alerts';
+import { register } from 'store/reducers/actions';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
@@ -34,6 +36,7 @@ import { EyeOutlined, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/ico
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const AuthRegister = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [level, setLevel] = useState();
@@ -55,24 +58,13 @@ const AuthRegister = () => {
     };
 
     const registerApi = (values) => {
-        axios({
-            method: 'POST',
-            url: 'http://api.agroplus.co.in/api/register',
-            data: {
-                MobNo: values.mobile,
-                Password1: values.password,
-                FirstName: values.firstname,
-                LastName: values.lastname,
-                Address1: 'test address',
-                EmailId: values.email,
-                FarmName: values.farm,
-                Flag: 0
-            }
-        })
-            .then(() => {
-                navigate('/login');
+        dispatch(
+            register({
+                values,
+                onSuccess: () => navigate('/login'),
+                onFail: () => setAuthError(true)
             })
-            .catch(() => setAuthError(true));
+        );
     };
 
     useEffect(() => {

@@ -56,15 +56,27 @@ const AuthLogin = () => {
     };
 
     const checkAuth = ({ password, mobile }) => {
-        axios({
-            method: 'GET',
-            url: `http://api.agroplus.co.in/api/Register/GetLogin/${mobile}/${password}`
-        })
-            .then((data) => {
-                dispatch(setToken(data));
-                navigate('/');
+        dispatch(
+            login({
+                data: { password, mobile },
+                onSuccess: () => {
+                    navigate('/');
+                },
+                onFail: (err) => setAuthError(true)
             })
-            .catch(() => setAuthError(true));
+        );
+
+        // axios({
+        //     method: 'GET',
+        //     url: `https://api.agroplus.co.in/api/Register/GetLogin/${mobile}/${password}`
+        // })
+        //     .then((data) => {
+        //         // console.log(data);
+        //         window.localStorage.setItem('agroplus-token', data?.data);
+        //         dispatch(setToken(data));
+        //         navigate('/');
+        //     })
+        //     .catch(() => setAuthError(true));
     };
 
     return (
