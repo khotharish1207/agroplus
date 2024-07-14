@@ -4,16 +4,19 @@ import { Button, Divider, Grid, InputLabel, List, ListItem, ListItemText, Stack,
 import AccountSelect from 'components/AccountSelect';
 import AddItem from 'components/AddItemModal';
 import FormField from 'components/FormField';
+import AutoComplete from 'components/autoComplete';
 // project import
 import MainCard from 'components/MainCard';
 import { Formik } from 'formik';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export const Purchase = () => {
+    const navigate = useNavigate();
     const [items, setItems] = useState([]);
     const [open, setOpen] = useState(false);
-    const units = useSelector((state) => state.units);
+    const { units, plot } = useSelector(({ units, plot }) => ({ units, plot }));
 
     const onOpen = () => setOpen(true);
     const onClose = () => setOpen(false);
@@ -41,7 +44,20 @@ export const Purchase = () => {
                                             </Stack>
                                         </Grid>
 
-                                        <FormField label="Plot Name" field="plotName" {...formik} />
+                                        <Grid item>
+                                            <Stack spacing={1} mb={2}>
+                                                <InputLabel id="unit-select">Plot Name</InputLabel>
+                                                <AutoComplete
+                                                    label="Plot Name"
+                                                    options={plot}
+                                                    labelField="PlotName"
+                                                    onAddNew={(newVal) => navigate('/plot', { state: { ...newVal } })}
+                                                />
+                                            </Stack>
+                                        </Grid>
+
+                                        {/* <FormField label="Plot Name" field="plotName" {...formik} /> */}
+
                                         <FormField label="Category" field="category" {...formik} />
                                         <Grid item sm={8}>
                                             <Typography variant="h5">Items</Typography>

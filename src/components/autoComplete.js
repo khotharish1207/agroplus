@@ -38,6 +38,7 @@ export const AutoComplete = ({
     only = [],
     labelField = 'label',
     NewTemplate = React.Fragment,
+    onAddNew,
     ...props
 }) => {
     const [open, setOpen] = useState(false);
@@ -100,19 +101,29 @@ export const AutoComplete = ({
                         );
                     } else if (newValue && newValue.inputValue) {
                         // Create a new value from the user input
-                        onChange(
-                            {
-                                [labelField]: newValue.inputValue
-                            },
-                            event
-                        );
-                        setOpen(true);
+                        if (onAddNew && typeof onAddNew === 'function') {
+                            onAddNew(
+                                {
+                                    [labelField]: newValue.inputValue
+                                },
+                                event
+                            );
+                        } else {
+                            onChange(
+                                {
+                                    [labelField]: newValue.inputValue
+                                },
+                                event
+                            );
+                            setOpen(true);
+                        }
                     } else {
                         onChange(newValue, event);
                     }
                 }}
                 {...props}
             />
+
             <Dialog onClose={handleClose} open={open} fullWidth>
                 <DialogTitle>Add New </DialogTitle>
                 <DialogContent>

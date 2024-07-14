@@ -1,6 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 // material-ui
 import { Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Divider } from '@mui/material';
@@ -18,6 +19,9 @@ export const Plot = () => {
     const [show, setShow] = React.useState(false);
     const plots = useSelector((state) => state.plot);
     const dispatch = useDispatch();
+    const { state } = useLocation();
+
+    console.log('...state....', state);
 
     React.useEffect(() => dispatch(fetchPlot()), []);
     const toggleShow = () => setShow(!show);
@@ -48,7 +52,7 @@ export const Plot = () => {
             <Grid xs={12}>
                 <MainCard>
                     <Formik
-                        initialValues={{}}
+                        initialValues={{ plotName: state?.PlotName }}
                         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                             console.log(values);
                             onSubmit(values);

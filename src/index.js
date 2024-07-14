@@ -16,6 +16,18 @@ import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
 
+import { fetchCrops, fetchLedger, fetchPlot } from 'store/reducers/actions';
+
+// ============//
+
+console.log(store);
+setTimeout(() => {
+    store.dispatch(fetchCrops());
+    store.dispatch(fetchLedger());
+    store.dispatch(fetchPlot());
+    console.log('dispatched');
+}, 1000);
+
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
 ReactDOM.render(

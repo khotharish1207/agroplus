@@ -2,7 +2,6 @@ import React from 'react';
 import _ from 'lodash';
 import { MenuItem, Select, Grid, Stack, InputLabel, Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-// import Select from './Select';
 const filter = createFilterOptions();
 
 const assets = [
@@ -39,17 +38,15 @@ const LedgerTypeSelect = ({ onChange, rest }) => {
         <Grid item>
             <Stack spacing={1} mb={2}>
                 <InputLabel htmlFor={'select-under'}>Ledger Type</InputLabel>
-              
+
                 <Autocomplete
                     disablePortal
-                    fullWidth
                     freeSolo
                     options={[
                         ...getMenuItems('Assets', assets, false),
                         ...getMenuItems('Liabilities', liabilities, false),
                         ...getMenuItems('Expenses', expenses, false)
                     ]}
-                    sx={{ width: 300 }}
                     renderInput={(params) => <TextField {...params} />}
                     onChange={(event, newValue) => {
                         console.log(newValue);

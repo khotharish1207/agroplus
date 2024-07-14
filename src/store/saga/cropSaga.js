@@ -10,7 +10,8 @@ export function* handler() {
         const { token } = yield select((state) => state.app);
         const config = {
             method: 'GET',
-            url: `CropMaster/GetCropName/${token}`
+            // url: `CropMaster/GetCropName/${token}`
+            url: `/CropMaster/`
         };
         yield put(setLoading(true));
 
