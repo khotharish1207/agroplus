@@ -119,6 +119,14 @@ export const AutoComplete = ({
                         }
                     } else {
                         onChange(newValue, event);
+                        // onChange({
+                        //     ...event,
+                        //     target: {
+                        //         name: labelField,
+                        //         id: labelField,
+                        //         value: newValue?.value || newValue?.inputValue
+                        //     }
+                        // });
                     }
                 }}
                 {...props}

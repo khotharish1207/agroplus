@@ -14,7 +14,7 @@ const assets = [
 const liabilities = [{ groupName: 'Loans (Liability)', under: 'Bank OD' }];
 const expenses = [{ groupName: 'Direct expenses', under: 'Direct expenses' }];
 
-const LedgerTypeSelect = ({ onChange, rest }) => {
+const LedgerTypeSelect = ({ onChange, field, ...rest }) => {
     const navigate = useNavigate();
 
     const getMenuItems = (type, items = [], isMenu = true) => {
@@ -40,6 +40,7 @@ const LedgerTypeSelect = ({ onChange, rest }) => {
                 <InputLabel htmlFor={'select-under'}>Ledger Type</InputLabel>
 
                 <Autocomplete
+                    name={field}
                     disablePortal
                     freeSolo
                     options={[
@@ -48,8 +49,13 @@ const LedgerTypeSelect = ({ onChange, rest }) => {
                         ...getMenuItems('Expenses', expenses, false)
                     ]}
                     renderInput={(params) => <TextField {...params} />}
+                    // renderOption={(props, option) => (
+                    //     <li {...props} value={option.value}>
+                    //         {option.label}
+                    //     </li>
+                    // )}
                     onChange={(event, newValue) => {
-                        console.log(newValue);
+                        console.log('newValue', newValue);
                         if (typeof newValue === 'string') {
                             //   setValue({
                             //     title: newValue,
@@ -61,7 +67,7 @@ const LedgerTypeSelect = ({ onChange, rest }) => {
                             //   });
                             navigate('/ledger', { state: { newLedger: newValue?.newLedger } });
                         } else {
-                            onChange(newValue?.value);
+                            onChange({ ...event, target: { name: field, id: field, value: newValue?.value } });
                         }
                     }}
                     getOptionLabel={(option) => {
@@ -91,6 +97,7 @@ const LedgerTypeSelect = ({ onChange, rest }) => {
 
                         return filtered;
                     }}
+                    {...rest}
                 />
             </Stack>
         </Grid>

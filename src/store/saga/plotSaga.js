@@ -10,8 +10,8 @@ export function* handler() {
         const { token } = yield select((state) => state.app);
         const config = {
             method: 'GET',
-            // url: `/PlotMaster/GetPlotName/${token}`
-            url: `/PlotMaster`
+            url: `/PlotMaster/GetPlotName/${token}`
+            // url: `/PlotMaster`
         };
         yield put(setLoading(true));
 
@@ -33,6 +33,10 @@ export function* addHandler({ payload }) {
         const config = {
             method: 'POST',
             url: '/PlotMaster',
+            maxBodyLength: Infinity,
+            headers: {
+                'Content-Type': 'application/json'
+            },
             data: {
                 EncryptID: token,
                 PlotName: plot?.plotName,
@@ -40,8 +44,8 @@ export function* addHandler({ payload }) {
                 Address1: plot?.plotAddress,
                 Area: plot?.plotArea,
                 OpeningBalance: plot?.plotOpeningBalence,
-                LedgerGorupName: groupName,
-                NatureOfLedgers: type,
+                LedgerGroupName: groupName,
+                NatureOfGroup: type,
                 Flag: 0
             }
         };

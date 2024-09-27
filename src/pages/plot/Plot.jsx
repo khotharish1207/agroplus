@@ -21,8 +21,6 @@ export const Plot = () => {
     const dispatch = useDispatch();
     const { state } = useLocation();
 
-    console.log('...state....', state);
-
     React.useEffect(() => dispatch(fetchPlot()), []);
     const toggleShow = () => setShow(!show);
 
@@ -64,7 +62,7 @@ export const Plot = () => {
                                     <Grid item sm={8}>
                                         <Alert {...alertProps} onClose={onCloseAlert} />
                                         <FormField label="Plot Name" field="plotName" {...formik} />
-                                        <LedgerType onChange={formik.handleChange}></LedgerType>
+                                        <LedgerType field="ledgerType" onChange={formik.handleChange}></LedgerType>
                                         <FormField label="Address" field="plotAddress" {...formik} />
                                         <FormField label="Plot Area" field="plotArea" {...formik} />
                                         {/* <FormField label="Plot Narration" field="plotNarration" {...formik} /> */}
